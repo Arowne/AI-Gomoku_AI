@@ -1,7 +1,10 @@
+from min_max_bot import *
+
 class Communication_protocol:
 
-    def __init__(self):
+    def __init__(self, bot):
         print("Init game")
+        self.bot = bot
         self.size = 0
         self.current_board = []
         self._x = 'X'
@@ -75,7 +78,12 @@ class Communication_protocol:
             if len(self.last_move) == 2:
                 print('oppenent move', self.last_move[0], self.last_move[1])
         print(board_to_str)
-        self.get_movement("Choose where you want to play 'x y'\n")
+        if self.move_index % 2 == 0:
+            self.get_movement("Choose where you want to play 'x y'\n")
+        else:
+            get_bot_move = self.bot.play(self.current_board, self._o, self.size, self.move_index)
+            self.move_index += 1
+            self.display_board(False)
 
     # Set begginer
     def get_first_turn(self, msg):
@@ -217,7 +225,8 @@ class Communication_protocol:
                 win_index = 0
 
 if __name__ == "__main__":
-    commuication_protocol = Communication_protocol()
+    bot = MinMaxBot()
+    commuication_protocol = Communication_protocol(bot)
     board_size = input("Please enter size of your board\n")
     boardsize_is_valid = commuication_protocol.check_boardsize(board_size)
 
